@@ -1,0 +1,62 @@
+% Chapter 1
+
+\chapter{Introduction to Time Series Analysis} % Main chapter title
+
+\label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+%----------------------------------------------------------------------------------------
+
+% Define some commands to keep the formatting separated from the content 
+\newcommand{\keyword}[1]{\textbf{#1}}
+\newcommand{\tabhead}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{\bfseries#1}}
+\newcommand{\option}[1]{\texttt{\itshape#1}}
+
+%----------------------------------------------------------------------------------------
+
+\section{What Is A Time Series}
+A time series is a sequential set of data points, measured typically over successive times
+% defination
+\subsection{Categories}
+\begin{itemize}
+    \item univariate vs. multivariate. A time series containing records of a single variable is termed as univariate, but if records of more than one variable are considered then it is termed as multivariate.
+    \item linear vs. non-linear. A time series model is said to be linear or non-linear depending on whether the current value of the series is a linear or non-linear function of past observations.
+    \item discrete vs. continuous. In a continuous time series observations are measured at every instance of time, whereas a discrete time series contains
+    observations measured at discrete points in time.
+\end{itemize}
+\subsection{Components of a Time Series}
+\begin{itemize}
+    \item Trend
+    \item Seasonal variation
+    \item Cyclical variation
+    \item Irregular variation
+\end{itemize}
+
+\section{How to identify time series anomaly period}
+
+Time series anomaly detection can be transformed into a task where the goal is to model the time series. Given this model, it finds periods where the predicted values are significantly different from the actual normal ones. Traditionally, researchers use ARMA, ARIMA, GARCH, and other statistics-based methods to do modeling tasks.
+
+\section{Statistical Methods and Comparassion}
+TODO: Stationarity and Whithe noise
+\subsection{AR and MA}
+TODO: Details
+\subsection{ARMA and ARIMA}
+TODO: Details
+\subsection{GARCH}
+TODO: Details
+
+%----------------------------------------------------------------------------------------
+
+\section{Architecture of This Report}
+
+\begin{itemize}
+\item Chapter 1: Introduction to Time Series Analysis Problem and Statistical Methods
+\item Chapter 2: Deep Learning theory and Related Derivative
+\item Chapter 3: Experiment Framework and Settings
+\item Chapter 4: Details of experiment 1 (Reporducing Bai's demo)
+\item Chapter 5: Details of experiment 2 (Reimplement methods with stock)
+\item Chapter 6: (optional) Details of experiment 3 (Revolutional methods and its perfomance)
+\item Chapter 7: Discussion of the experimental results
+\item Chapter 8: Conclusion and future directions
+\end{itemize}
