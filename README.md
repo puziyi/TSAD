@@ -6,6 +6,6 @@ This repository holds experiment codes and research reports of the Time Series A
 
 25 Feb 2021
 
-1. 整理和统一当前资料、文档的内容和格式
-2. 寻找TCN应用相关论文中的数据
-3. 依据数据和论文调试修改程序，尝试复现
+- Enrich our reports with a more systematic illustrate, including add content in traditional time series analysis, uniform symbols among different models, use more table and figures for visualization
+- Try to implement methods(except TCN) in Bai's paper and generate a vanilla comparison by our own
+- Try to find some easy-to-start data to reproduce related papers' model and their experiments
