@@ -1,6 +1,6 @@
 # TSAD
 
-This repository holds experiment codes and research reports of the Time Series Anomaly Detection project for SDSC6002 at CityU of HK. 
+This repository holds experiment codes and research reports of the Time Series Anomaly Detection project for SDSC6002 at CityU of HK.
 
 ## TODO
 
