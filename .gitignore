@@ -3,3 +3,6 @@ reports/Appendices/*.aux
 reports/main.run.xml
 reports/main.synctex.gz
 reports/Chapters/.DS_Store
+ExpCode/bai
+ExpCode/stock
+ExpCode/__pycache__
