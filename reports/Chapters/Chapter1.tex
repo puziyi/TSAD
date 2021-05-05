@@ -37,7 +37,7 @@ A time series is a sequential set of data points, measured typically over succes
 \section{How to identify time series anomaly period}
 
 Time series anomaly detection can be transformed into a task where the goal is to model the time series; and given this model, it finds periods where the predicted values are significantly different from the others. Traditionally, researchers use ARMA, ARIMA, GARCH, and other statistics-based methods to do modeling tasks.
-
+% How to define anomaly and how to evaluate such a judgement?
 \section{Statistical Methods and Comparassion}
 TODO: Stationarity and Whithe noise
 \subsection{AR and MA}
@@ -52,11 +52,9 @@ TODO: Details
 \section{Architecture of This Report}
 
 \begin{itemize}
-\item Chapter 1: Introduction to Time Series and Sequential Modeling
+\item Chapter 1: Introduction to sequential modeling and time series anomaly detection
 \item Chapter 2: Deep Learning theory and Related Derivative
-\item Chapter 3: Details of experiment 1 (Reporducing Bai's demo. Done with code) (contains experiment settings, related methodology and code environment)
-\item Chapter 4: Details of experiment 2 (Reimplement methods with grid load)
-\item Chapter 5: (optional) Details of experiment 3 (Revolutional methods and its perfomance)
-\item Chapter 6: Discussion of the experimental results
-\item Chapter 7: Conclusion and future directions
+\item Chapter 3: Experiment 1: TCN in various prediction issues
+\item Chapter 4: Experiment 2: Time series anomaly detection in grid load issue
+\item Chapter 5: Conclusion and future directions
 \end{itemize}
