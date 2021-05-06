@@ -17,27 +17,54 @@
 
 \section{What Is A Time Series}
 
-A time series is a sequential set of data points, measured typically over successive times
+A time series is a sequential set of data points, measured typically over successive times. Most commonly, a time series is a sequence taken at successive equally spaced points in time. So it is a sequence of discrete-time data. In our daily life, observing data at various points in time is a common activity. Time series data can be found in many fields such as agriculture, economics, meteorology and military. For example, the ancient Egyptians recorded the fluctuations of the Nile River day by day, it is a time series. The sequence of daily closing prices of the Google Inc. stock is a time series. The heart rate monitoring records is a time series.
+
+Once a time series is collected or measured, the primary goal is to analyze the time series and forecast the future values of the time series. Time series analysis comprises methods for analyzing time series data in order to extract meaningful statistics and other characteristics of the data. In the development process of time series analysis methods, the application of economics, finance, engineering and other fields has always played an important role in promoting, and every step of the development of time series analysis is inseparable from the application. 
+
+Time series forecasting is the use of a model to predict future values based on previously observed values. One of biggest differences between time series data and other types of data is that time series data have a natural temporal ordering, the data value at the current moment is related to the data value at the previous moment. This feature indicates that the past data has hinted the law of current or future data development.
+
 % defination
 \subsection{Categories}
+Methods of time series analysis can be divided into univariate and multivariate, linear and non-linear, discrete and continuous.
 \begin{itemize}
-    \item univariate vs. multivariate. A time series containing records of a single variable is termed as univariate, but if records of more than one variable are considered then it is termed as multivariate.
-    \item linear vs. non-linear. A time series model is said to be linear or non-linear depending on whether the current value of the series is a linear or non-linear function of past observations.
-    \item discrete vs. continuous. In a continuous time series observations are measured at every instance of time, whereas a discrete time series contains
+    \item Univariate vs. multivariate. A time series containing records of a single variable is termed as univariate, but if records of more than one variable are considered then it is termed as multivariate, multivariate time series model is an extension of the univariate case.
+    \item Linear vs. non-linear. A time series model is said to be linear or non-linear depending on whether the current value of the series is a linear or non-linear function of past observations.
+    \item Discrete vs. continuous. In a continuous time series observations are measured at every instance of time, whereas a discrete time series contains
     observations measured at discrete points in time.
 \end{itemize}
+
 \subsection{Components of a Time Series}
-\begin{itemize}
-    \item Trend
-    \item Seasonal variation
-    \item Cyclical variation
-    \item Irregular variation
-\end{itemize}
+An observed time series can be decomposed into four components: the trend (long term direction), the seasonal variations (systematic, calendar related movements), the cyclical variation (periodical but not seasonal), and the irregular variation (unsystematic, short term fluctuations). Each expressing a particular aspect of the movement of the values of the time series. 
+
+\subsubsection{Trend}
+The trend shows the general tendency of the data to increase or decrease during a long period of time. A trend is a smooth, general, long-term, average tendency. It is not always necessary that the increase or decrease is in the same direction throughout the given period of time.
+
+It is observable that the tendencies may increase, decrease or are stable in different sections of time. But the overall trend must be upward, downward or stable. The population, agricultural production, items manufactured, number of births and deaths, number of industry or any factory, number of schools or colleges are some of its example showing some kind of tendencies of movement.
+\subsubsection{Seasonal variation}
+These are the rhythmic forces which operate in a regular and periodic manner over a span of less than a year. They have the same or almost the same pattern during a period of 12 months. This variation will be present in a time series if the data are recorded hourly, daily, weekly, quarterly, or monthly.
+These variations come into play either because of the natural forces or man-made conventions. The various seasons or climatic conditions play an important role in seasonal variations. Such as production of crops depends on seasons, the sale of umbrella and raincoats in the rainy season, and the sale of electric fans and A.C. shoots up in summer seasons.
+\subsubsection{Cyclical variation}
+The variations in a time series which operate themselves over a span of more than one year are the cyclic variations. This oscillatory movement has a period of oscillation of more than a year. One complete period is a cycle.
+\subsubsection{Irregular variation}
+There is another factor which causes the variation in the variable under study. They are not regular variations and are purely random or irregular. These fluctuations are unforeseen, uncontrollable, unpredictable, and are erratic. 
 
 \section{How to identify time series anomaly period}
 
-Time series anomaly detection can be transformed into a task where the goal is to model the time series; and given this model, it finds periods where the predicted values are significantly different from the others. Traditionally, researchers use ARMA, ARIMA, GARCH, and other statistics-based methods to do modeling tasks.
-% How to define anomaly and how to evaluate such a judgement?
+Time series anomaly detection can be transformed into a task where the goal is to model the time series; and given this model, it finds periods where the predicted values are significantly different from the others. Traditionally, researchers use ARMA, ARIMA, GARCH, and other statistics-based methods to do modeling tasks. And following are some common approaches to use for anomaly detection:
+\subsubsection{Model-based method}
+Determine whether the sample point is an abnormal sample by judging whether the difference between the sample value and the expected value exceeds the critical value. This method can be divided into estimation models and prediction models by different ways to get expectations. For example, a common method to define outliers is the “3 times the standard deviation”rule, often referred to as the three-sigma rule of thumb. If this absolute value is more than 3 times the standard deviation of our values, then we can consider the value as an outlier or anomaly. Except this, a box plot or boxplot is a method for graphically depicting groups of numerical data through their quartiles, which can be used to find anomaly points. Grubbs' s test, also known as the maximum normalized residual test or extreme studentized deviate test, is a test used to detect outliers in a univariate data set assumed to come from a normally distributed population.
+
+\subsubsection{Density-based method}
+The density estimation of the object can be calculated relatively directly, especially when there is a proximity measure between the objects, the object in the low-density area is relatively far away from the neighbors, which may be regarded as abnormal. A more sophisticated method takes into account the fact that the data set may have regions of different density, and classifies a point as an outlier only when its local density is significantly lower than most of its neighbors.
+
+\subsubsection{Cluster-based method}
+One way to use clustering to detect outliers is to discard small clusters that are far away from other clusters. This method can be used with any clustering method, but requires the minimum cluster size and the national value of the distance between small clusters and other clusters. Generally, the process can be simplified to discard all clusters smaller than a certain minimum size. This scheme is highly sensitive to the choice of the number of clusters.
+
+\subsubsection{Partition-based method}
+The partition-based method is used for anomaly detection, which is often very interpretable and easy to operate at the same time. The simplest division method is threshold detection, which sets thresholds through human experience and judges data abnormalities.
+
+Specifically, in order to avoid false alarms caused by single-point jitter, it is necessary to determine the average value of the accumulated window for threshold judgment, and the specific accumulation is to operate through the window. There are many optional choices for the statistical characteristics of the window, such as moving average, cumulative moving average, weighted moving average,exponential weighted moving average, stddev from average etc. 
+
 \section{Statistical Methods and Comparassion}
 TODO: Stationarity and Whithe noise
 \subsection{AR and MA}
@@ -54,7 +81,7 @@ TODO: Details
 \begin{itemize}
 \item Chapter 1: Introduction to sequential modeling and time series anomaly detection
 \item Chapter 2: Deep Learning theory and Related Derivative
-\item Chapter 3: Experiment 1: TCN in various prediction issues
+\item Chapter 3: Experiment 1: TCN in various sequence datasets
 \item Chapter 4: Experiment 2: Time series anomaly detection in grid load issue
 \item Chapter 5: Conclusion and future directions
 \end{itemize}
