@@ -9,20 +9,21 @@
 
 \section{Recurrent Neural networks}
 
-Artificial neural networks usually only fetch and process one input individually, and the previous input has nothing to do with the next input. However, some tasks need to handle sequence information better, which means the previous input is related to the subsequent input. In this kind of problem, former researchers Graves and Alex(2009) designed the recurrent neural network (RNN), which is a class of artificial neural networks where connections between nodes form a directed graph along a temporal sequence. This allows it to exhibit temporal dynamic behavior. Derived from feedforward neural networks, RNNs can use their internal state (memory) to process variable-length sequences of inputs.
+Artificial neural networks usually only fetch and process one input individually, and the previous input has nothing to do with the next input. However, some tasks need to handle sequence information better, which means the previous input is related to the subsequent input. In this kind of problem, former researchers Graves and Alex (2009) designed the recurrent neural network (RNN), which is a class of artificial neural networks where connections between nodes form a directed graph along a temporal sequence. This allows it to exhibit temporal dynamic behavior. Derived from feedforward neural networks, RNNs can use their internal state (memory) to process variable-length sequences of inputs.
 
 Sepp Hochreiter and Jürgen Schmidhuber (1997) post the practical method under the concept of RNN, that is, Long short-term memory (LSTM) architecture, with both feedforward neural networks and feedback connections.  This makes them applicable to tasks such as unsegmented, connected handwriting recognition, or speech recognition.
 
 \section{Convolutional Neural Networks and TCN}
 
-Convolutional Neural Networks(CNNs) were originally used on two-dimensional and three-dimensional images, but they are also suitable for one-dimensional data such as univariate time series. Shaojie Bai, J. Zico Kolter, and Vladlen Koltun(2018) designed the architecture temporal convolutional network(TCN) and ran it into image, sound, and text level tasks. This work inspired that convolutional networks could reach the same even better results as other sequence models. Alberto(2019) experimented with TCN and other sequence models in smart grids situations, also found that convolutional networks are significantly useful in time series tasks. However, Seq2Seq methods still hold the best performance place.
+Convolutional Neural Networks (CNNs) were originally used on two-dimensional and three-dimensional images, but they are also suitable for one-dimensional data such as univariate time series. Shaojie Bai, J. Zico Kolter, and Vladlen Koltun (2018) designed the architecture temporal convolutional network (TCN) and ran it into image, sound, and text level tasks. This work inspired that convolutional networks could reach the same even better results as other sequence models. Alberto (2019) experimented with TCN and other sequence models in smart grids situations, also found that convolutional networks are significantly useful in time series tasks. However, Seq2Seq methods still hold the best performance place.
 
 \subsection{The origin of TCN}
 The Temporal Convolutional Networks (TCNs) was first proposed by the work of Lea et al. (2016) for video-based action segmentation. The two steps of this conventional process include: firstly, computing of low-level features using (usually) CNN that encode spatial-temporal information and secondly, input these low-level features into a classifier that captures high-level temporal information using (usually) RNN. The main disadvantage of such an approach is that it requires two separate models. TCN provides a unified approach to capture all two levels of information hierarchically.
 
 \subsubsection{Encoder-Decoder TCN} The encoder-decoder framework is presented in below, where further information regarding the architecture can be found in the first two references (at the end of the post). The most critical issues are provided as follows: TCN can take a series of any length and output it as the same length. A causal convolutional is used where a 1D fully convolutional network architecture is used. A key characteristic is that the output at time $t$ is only convolved with the elements that occurred before $t$. 
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{../Figures/ch3_1.png}
+    \includegraphics[width=0.9\textwidth]{../Figures/ch3_1.png}
+    \caption{Encoder-Decoder TCN}
 \end{figure}
 The encoder consists of $L$ layers denotes by $E^l \in R^{F_l\times T_l}$ where $F_l$ is the number of convolutional filters in a the $l-th$ layer and $T_l$ is the number of corresponding time steps. Each layer consists of temporal convolutions, a non-linear activation function, and max pooling across time. We define the collection of filters in each layer as $W=W^{(i)F_l}_{i=1}$ for $W^{(i)} \in R ^{d \times F_{l-1}}$ with a corresponding bias vector $b \in R^{F_l}$. Given the signal from the previous layer,$E^{(l-1)}$, we compute $E^{(l)}$activations  with $$E^{(l)} = max pooling(f(W \times E^{(l-1)} + b ))$$, where $f(\cdot)$is the activation function and $\star$ is the (“same”) convolution operator. After each activation function we max pool with width 2 across time so $T_l = \frac{1}{2}T_{l-1}$. Pooling enables us to efficiently compute activations over long temporal windows.
 
@@ -30,7 +31,7 @@ The decoder is similar to the encoder, except that upsampling is used instead of
 We explored other mechanisms, such as skip connections between layers, different patterns of convolutions, and other normalization schemes, however, the proposed model outperformed these alternatives and is arguably simpler.
 
 \subsubsection{Dilated TCN}
-As shown in \ref{fig:dtcn}, we define a series of blocks, each of which contains a sequence of $L$ convolutional layers. The activations in the $l-th$ layer and $j-th$ block are given by $S^{(j,l) \in R^{(F_w \times T)}}$ . The input into each block $S^{(j,1)}$ is the output from the previous block $S^{(j-1,L)}$, except for the first block which is defined as the input data. Each layer has the same number of filters $F_w$, which enables us to combine activations from different layers using skip connections later. Each layer consists a set of dilated convolutions with rate parameter $s$, a non-linear activation $f(\cdot)$, and a residual connection than combines the layer’s input and the convolution signal. Convolutions are only applied over two-time steps, $t$ and $t-s$, so we write out the full equations below. 
+As shown in \ref{fig:dtcn}, we define a series of blocks, each of which contains a sequence of $L$ convolutional layers. The activations in the $l-th$ layer and $j-th$ block are given by $S^{(j,l)} \in R^{(F_w \times T)}$ . The input into each block $S^{(j,1)}$ is the output from the previous block $S^{(j-1,L)}$, except for the first block which is defined as the input data. Each layer has the same number of filters $F_w$, which enables us to combine activations from different layers using skip connections later. Each layer consists a set of dilated convolutions with rate parameter $s$, a non-linear activation $f(\cdot)$, and a residual connection than combines the layer’s input and the convolution signal. Convolutions are only applied over two-time steps, $t$ and $t-s$, so we write out the full equations below. 
 
 The filters are parameterized by $W = \left\{W^{(1)},W^{(2)}\right\}$ with $W^{(i)} \in R^{F_w \times F_w}$ and bias vector $b \in R{F_w}$. Let $\hat{S_t}^{(j,l)}$ be the result of the dilated convolution at time $t$ and $S_t^{j,l}$ be the result after adding the residual connection such that $$\hat{S_t}^{(j,l)} = f(W^{(1)}S_{t-s}^{(j,l-1})+W^{(2)}S_{t}^{(j,l-1})+b)$$
 $$ S_t^{\left(j,l\right)}=S_t^{\left(j,l-1\right)}+V{\hat{S}}_t^{\left(j,l\right)}+e $$
@@ -41,7 +42,8 @@ The dilation rate increases for consecutive layers within a block such that $s_l
 There is a set of latent states $Z_t^{(1)} = ReLU(V_rZ_t^{(0)} + e_r)$ for weight matrix $V_r \in R^{F_w \times F_w}$ and bias $e_r$. The predictions for each time $t$ are given by $$\hat{Y_t} = softmax(UZ_t^{(1)}+C)$$ for weight matrix $U \in R^{C \times F_w}$ and bias $c \in R^C$.
 
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{../Figures/ch3_2.png}
+    \includegraphics[width=0.9\textwidth]{../Figures/ch3_2.png}
+    \caption{Dilated TCN}
     \label{fig:dtcn}
 \end{figure}
 
@@ -56,11 +58,12 @@ A residual block contains a branch leading out to a series of transformations F,
 Let’s consider a layer with a dilation factor $d$ of 2 and kernel size $k$ of 3 from the basic model to see how this translates into a residual block of the improved model.
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{../Figures/ch3_3.png}
+    \caption{Residual Blocks}
 \end{figure}
 
 The output of the two convolutional layers will be added to the input of the residual block to produce the input for the next block. For all inner blocks of the network, i.e. all but the first and the last one, the input and output channel width is the same, namely num\_filters. Since the first convolutional layer of the first residual block and the second convolutional layer of the last residual block may have different input and output channel widths, the width of the residual tensor might have to be adjusted, which is done using a $1\times1$ convolution.
 
-This change affects the calculus for the minimum number of required layers for full coverage. Now we have to think about how many residual blocks are necessary to achieve a full receptive field coverage. Adding a residual block to a TCN adds twice as much receptive field width than when adding a basic causal layer, since it includes 2 such layers. So the total size of the receptive field r of a TCN with dilation base b, kernel size k with $k \geq b $and number of residual blocks n can be computed as $$r = 1 + \sum_{i=0}^{n-1}2(k-1)b^i=1+2(k-1)\times \frac{b^n-1}{b-1}$$, which leads to a minimum number of residual blocks  for full history coverage of input\_length $l$ of $$n=\left[log_b(\frac{(l-1)(b-1)}{2(k-1)}+1)\right]$$.
+This change affects the calculus for the minimum number of required layers for full coverage. Now we have to think about how many residual blocks are necessary to achieve a full receptive field coverage. Adding a residual block to a TCN adds twice as much receptive field width than when adding a basic causal layer, since it includes 2 such layers. So the total size of the receptive field r of a TCN with dilation base b, kernel size k with $k \geq b $and number of residual blocks n can be computed as $$r = 1 + \sum_{i=0}^{n-1}2(k-1)b^i=1+2(k-1)\times \frac{b^n-1}{b-1}$$, which leads to a minimum number of residual blocks  for full history coverage of input\_length $l$ of $$n=\left[log_b(\frac{(l-1)(b-1)}{2(k-1)}+1)\right]$$
 
 \subsubsection{Activation, Normalization, Regularization}
 To make our TCN more than just an overly complex linear regression model, activation functions need to be added on top of the convolutional layers to introduce non-linearities. $ReLU$ activations are added to the residual blocks after both convolutional layers.
@@ -70,12 +73,14 @@ To normalize the input of hidden layers (which counteracts the exploding gradien
 In order to prevent overfitting, regularization is introduced via dropout after every convolutional layer in every residual block. The following figure shows the final residual block.
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{../Figures/ch3_4.png}
+    \caption{Final Residual Blocks}
 \end{figure}
 The asterisk in the second $ReLU$ unit indicates that it is present in every layer but the last one, since we want our final output to be able to take on negative values as well (this differs from the architecture outlined in the paper).
 
 The following picture shows our final TCN model with $l$ equal to input\_length, $k$ equal to kernel\_size, $b$ equal to dilation\_base, $k\geq b$ and with a minimum number of residual blocks for full history coverage, where $n$ can be computed from the other values as explained above.
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{../Figures/ch3_5.png}
+    \caption{final TCN model}
 \end{figure}
 
 
@@ -86,6 +91,7 @@ The buzz around TCN arrives even to Nature journal, with the recent publication 
 In the paper, the author introduces a mode called ensemble empirical mode decomposition (EEMD). EEMD not only can decompose high-frequency time series into some adaptive orthogonal components, called intrinsic mode functions (IMFs), but also has the advantages of noise-assistance and overcoming the drawbacks of mode mixing in conventional empirical mode decomposition (EMD). EEMD can be used to decompose the high-frequency time-series Niño 3.4 index and SOI data into multiple adaptive orthogonal components to improve the prediction accuracy of the model. Therefore, this paper proposes the EEMD-TCN hybrid approach, which is used to decompose the highly variable ENSO indexes (Niño 3.4 index and SOI) into relatively flat subcomponents, and then uses the TCN model to predict each subcomponent in advance, finally combining the sub-prediction results to obtain the final ENSO prediction results.
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{../Figures/ch3_6_weather.png}
+    \caption{Different model performance in Weather data}
 \end{figure}
 
 \subsubsection{Traffic prediction}
@@ -94,6 +100,7 @@ In this paper, they describe the overall architecture of H-STGCN, as illustrated
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{../Figures/ch_3_7_traffic.png}
+    \caption{H-STGCN model}
 \end{figure}
  \textbf{Historical Average (HA).}  Let $L$ denote the number of time slots in a week. Then the historical average of variable $\omega_{i,t}$ (ideal future: volume or travel time) is given by
 $$\omega_{i,t}^{\left(h\right)}={\frac{1}{W}}_{r\equiv t}\sum_{\left(mod\ L\right),r\neq t,r\in\left[0,S_{train}\right)}\omega_{i,t}$$
@@ -113,10 +120,12 @@ where ${\hat{\tau}}_{i,t+f}$is the model output and $\tau_{i,t+f}$ is the ground
 The field of sound event localization and detection (SELD) continues to grow. Understanding the environment plays a critical role in autonomous navigation. Guirguis et al. (2020) recently proposed a novel architecture for sound events SELD-TCN. They claim that their framework outperforms the state-of-the-art in the field, with faster training time. In their SELDnet (architecture below), a multichannel audio recording, sampled at 44.1 kHz, extracts, by applying a short-time Fourier transformation, the phase and magnitude of the spectrum, and stacks it as separate input features. Then, convolutional blocks and recurrent blocks (bi-directional GRUs) are connected, followed by a fully-connected block. The output of the SELDnet is the SOUND Event Detection (SED) and Direction Of Arrival (DOA).
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{../Figures/ch_3_8_sound_1.png}
+    \caption{SED and DOA}
 \end{figure}
  In order to outperform it, they present the SELD-TCN:
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{../Figures/ch_3_9_sound_2.png}
+    \caption{SELD-TCN model}
 \end{figure}
 The aforementioned SELDnet architecture is used while replacing the recurrent block by a TCN, where they adopt the WaveNet architecture. Fig. b shows an overview of the proposed TCN block architecture. Then, to mimic the bidirectional RNNs’ use of future
 knowledge, they modify all convolutions within the TCN block to be non-causal. In this implementation, they use 10 residual blocks (ResBlocks) with dilation rates $d = \left[2^0,2^1,\cdots,2^9\right]$. As shown in above figure, the ResBlock consists of 1D dilated convolutions with 256 filters of size 3 and a dilation rate d.
@@ -125,7 +134,8 @@ As the dilated convolutions enable the net to process a variety of inputs, a mor
 \subsubsection{Probabilistic forecasting}
 A novel framework designed by Chen et al. (2020) can be applied to estimate probability density. Time series prediction improves many business decision-making scenarios (for example, resources management). Probabilistic forecasting can extract information from historical data and minimize the uncertainty of future events. When the prediction task is to predict millions of related data series (as in the retail business), it requires prohibitive labor and computing resources for parameter estimation. In order to solve these difficulties, they proposed a CNN-based density estimation and prediction framework. Their framework can learn the latent correlation among series. The novelty in their work is the deep TCN they proposed, as presented in their architecture:
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{../Figures/ch_3_10.png}
+    \includegraphics[width=0.9\textwidth]{../Figures/ch_3_10.png}
+    \caption{Deep-TCN model}
 \end{figure}
 (a) The architecture of Deep-TCN. Encoder part: stacked dilated causal convolutional nets are constructed to capture the long-term temporal dependencies. Decoder part: the decoder includes a variant of residual block (referred as resnet-v, shown as $\oplus$ ) and an output dense layer. The module resnet-v is designed to integrate output of stochastic process of historical observations and future covariates. Then the output dense layer is adopted to map the output of resnet-v into final forecasts. \\
 (b) Encoder module. Residual blocks are taken as the ingredient. Each residual block consists of two layers of dilated causal convolutions, the first of which is followed by a batch normalization and ReLU and the second of which is follow by another batch normalization. The output is taken as the input of the residual block, followed by another ReLU. \\
@@ -138,6 +148,7 @@ In this paper, they propose a novel knowledge-driven temporal convolutional netw
 
 \begin{figure}[H]
     \includegraphics[width=\textwidth]{../Figures/ch_3_11_1.png}
+    \caption{KDTCN model}
 \end{figure}
 
 In the KDTCN architecture, the original model inputs are price values $\mathcal{X}$ , news corpus $\mathcal{N}$ , and knowledge graph $\mathcal{G}$. The price values are normalized and mapped into the price vector, denoted by
@@ -157,4 +168,4 @@ Finally, event embeddings, combined with price vectors are input into a TCN-base
 
 \section{Other Derivatives(eg. Transformer)}
 
-Several papers have studied using basic and modified attention mechanisms for time series data. LSTNet(Guokun Lai(2018)) is one of the papers that proposes using an LSTM + attention mechanism for multivariate forecasting time series. Temporal Pattern Attention for Multivariate Time Series Forecasting by Shun-Yao Shih et al. focused on applying attention specifically for multivariate data. This mechanism aimed to resolve issues including noisy variables in the multivariate time series and introduce a better method than a simple average. Neo Wu et al.(2020) employed Transformer-based machine learning models to forecast time series data. This approach works by leveraging self-attention mechanisms to learn complex patterns and dynamics from time-series data.
+Several papers have studied using basic and modified attention mechanisms for time series data. LSTNet (Guokun Lai (2018)) is one of the papers that proposes using an LSTM with attention mechanism for multivariate forecasting time series. Temporal Pattern Attention for Multivariate Time Series Forecasting by Shun-Yao Shih et al. focused on applying attention specifically for multivariate data. This mechanism aimed to resolve issues including noisy variables in the multivariate time series and introduce a better method than a simple average. Neo Wu et al.(2020) employed Transformer-based machine learning models to forecast time series data. This approach works by leveraging self-attention mechanisms to learn complex patterns and dynamics from time-series data.
