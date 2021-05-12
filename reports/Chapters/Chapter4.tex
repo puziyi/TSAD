@@ -68,7 +68,7 @@ GRU\-Rec & 746.99& 19.64& 0.79& 27.33 \\
 GRU\-MIMO& 423.54& 15.50& 0.82& 20.58 \\
 Vanilla RNN& 2275.85& 30.47& 0.73& 47.71 \\
 LSTM\-Rec & 697.94& 24.65& 0.76& 26.42 \\
-LSTM\-MIMO & 378.31& 16.18& 0.84& 19.45 \\
+LSTM\-MIMO & 378.31& 16.18& 0.87& 19.45 \\
 FNN & 330.90& 10.53& \color{red}0.88& 18.19 \\
 \bottomrule
 \end{tabular}
@@ -290,77 +290,146 @@ As for Epochs, which means the number of passes of the entire training dataset t
 
 Learning rate, L2-regulation, and the number of out channels were also influenced, but they mainly contributed to improving computation speed.
 
-\newpage
+% \newpage
 \section{Further Discussion with Dataset Sensitivity of TCN and LSTM }
 From the previous experiment result, the TCN model present a good performance with whole Gefcom2014 dataset, but it’s not the most outstanding one. Then here are some assumptions coming up: \\
 1. Is the TCN would perform better in a high variance dataset than a low variance dataset, in other word, have a better performance on anomaly detection; \\
-2. How much the size of dataset would influence the TCN fitted result. \\
-
-In order to find specific effects on different type of data from TCN, we create four datasets derived from original Gefcom2014 data as training data: (a). Data with low variance; (b). Data with high variance; (c).  Long-term data; (d). Short-term data. The plots of the four datasets are below:
+2. How much the size of dataset would influence the TCN fitted result. 
+\subsection{Experiment on different variance data}
+In order to find specific effects on different variance of data with TCN, we create four datasets derived from original Gefcom2014 data as object data, each data has different variance. The plots of the four datasets are below:
 
 \begin{figure}[htbp]
 \centering
-\subfloat[low variance data]{
+\subfloat[data1]{
     \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[width=6.5cm]{reports/Figures/low-variance-data.PNG}
+    \includegraphics[width=6.5cm]{reports/Figures/data1.PNG}
     \end{minipage}
 }
-\subfloat[high variance data]{
+\subfloat[data2]{
     \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[width=6.5cm]{reports/Figures/high-variance-data.PNG}
+    \includegraphics[width=6.5cm]{reports/Figures/data2.PNG}
     \end{minipage}
 }
 
-\subfloat[long-term data]{
+\subfloat[data3]{
     \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[width=6.5cm]{reports/Figures/long-term-data.PNG}
+    \includegraphics[width=6.5cm]{reports/Figures/data3.PNG}
     \end{minipage}
     }
-\subfloat[short-term data]{    
+\subfloat[data4]{    
     \begin{minipage}[t]{0.48\textwidth}
     \centering
-    \includegraphics[width=6.5cm]{reports/Figures/short-term-data.PNG}
+    \includegraphics[width=6.5cm]{reports/Figures/data4.PNG}
     \end{minipage}
 }
 \caption{Plots of datasets} 
 \label{Plots of datasets}%                         
 \end{figure}
 
-By applying TCN on datasets, we get experiment results as below, and we use $R^2$ as measurement.
+By applying TCN on datas, we get experiment results as below, and we use $R^2$ as measurement.
 \begin{table}[H]
 \centering
-\caption{TCN Performance Comparison}
+\caption{TCN Performance Comparison 1}
 \begin{tabular}{l r r r r}
 \toprule
-\textbf{TCN} & \textbf{$R^2$} & \textbf{epoch} & \textbf{data size}& \textbf{stable epoch}\\
+\textbf{data}  & \textbf{data variance}& \textbf{$R^2$} & \textbf{epoch}& \textbf{stable epoch}\\
 \midrule
-low variance data & 0.7201& 150& 2424& 110\\
-high variance data & 0.7586& 150& 2424& 110 \\
-long-term data& 0.8532& 150& 24240& 10 \\
-short-term data& 0.7525& 150& 4848& 70 \\
+data1 & 928.38 & 0.7201& 150& 110\\
+data2 & 1380.28 & 0.7586& 150& 110 \\
+data3 & 2263.21 & 0.9246& 150& 10 \\
+data4 & 3200.74 & 0.7805& 150& 70 \\
 \bottomrule
 \end{tabular}
 \label{tab:TCN}
 \end{table}
 
-In the table the 'stable epoch' means the amount of epochs the model needed to iterate and attain a stable $R^2$ value. From the results we find that with high variance data, TCN do get improvement on $R^2$, which represent that TCN model is more sensitive to detect anomaly in time series data. And for long-term dataset, TCN would easily get a good fitted result with only 10 epochs training, while for short-term dataset, TCN perform worse and need more than 70 epochs training to provide a relatively good result.\\
-And as LSTM performs better with original data in previous experiment, we try to apply it on the four datasets as comparison. In order to make comparison the more convincing, most of the hyper-parameters in two models are stay the same. The results are shown below:
+In the table the 'stable epoch' means the amount of epochs the model needed to iterate and attain a stable $R^2$ value. From the results we find that with high variance data, TCN do perform better on $R^2$, which represent that TCN model is more sensitive to detect anomaly in time series data. However, for data3, the variance of it is not greater than data4, while the corresponding $R^2$ is higher. By comparing the data shape above, we can find that data4 is more likely a data merged by two stable datasets with a sharp connection between them, while data3 is a real fluctuated data. \\
+And as LSTM also performs well with original data in previous experiment, we try to apply it on the four datasets as comparison. In order to make comparison the more convincing, most of the hyper-parameters in two models are stay the same. The results are shown below:
 \begin{table}[H]
 \centering
-\caption{LSTM Performance Comparison}
+\caption{LSTM Performance Comparison 1}
 \begin{tabular}{l r r r r}
 \toprule
-\textbf{LSTM} & \textbf{$R^2$} & \textbf{epoch} & \textbf{data size}& \textbf{stable epoch}\\
+\textbf{data}  & \textbf{data variance}& \textbf{$R^2$} & \textbf{epoch}& \textbf{stable epoch}\\
 \midrule
-low variance data & 0.7161& 50& 2424& 30\\
-high variance data & 0.7411& 50& 2424& 30 \\
-long-term data& 0.8656& 50& 24240& 10 \\
-short-term data& 0.8149& 50& 4848& 30 \\
+data1 & 928.38 & 0.7161 & 50& 30\\
+data2 & 1380.28 & 0.7637 & 50& 30 \\
+data3 & 2263.21 & 0.8385 & 50& 30 \\
+data4 & 3200.74 & 0.7761 & 50& 30 \\
 \bottomrule
 \end{tabular}
 \label{tab:LSTM}
 \end{table}
-The results show that LSTM also performs better in high variance data, but the $R^2$ improvement from high variance data to low variance data is not much as TCN. And for the $R^2$ of long-term data and short-term data, LSTM also get a lower improvement compared to TCN, which means that TCN is more sensitive to the data size. However, when faced a small dataset, LSTM need fewer epochs to attain the relative optimal point than TCN, which indicates that LSTM would be more efficient in time series data training while applying on small sample. One of the reasons is that TCN model have convolutional layers with more parameters need to be iterated. When LSTM is processing, only one hidden state need to be concentrate on and every state get one single input, while for TCN, it request a long enough sequence to keep the history state, which require a bigger memory. However, since the same filter is used in each layer, convolutions can be done in parallel, so that TCN would be more efficient on huge dataset instead of small dataset. 
+The results show that LSTM also performs better in high variance data, and the $R^2$ in data3 is also greater than data4. but the $R^2$ improvement from low variance data to high variance data is not as much as TCN. The difference may because that in TCN, convolutional layer used to extract features, so that in fluctuated dataset, it would easier to extract useful features and improve the model performance, while in flatter dataset, it's advantage can not be applied and can hardly outperform other NN algorithms.
+\subsection{Experiment on different size data}
+In order to find specific effects on different size of data with TCN, we create four datasets derived from original Gefcom2014 data as training data, each data has different data size. The plots of the four datasets are below:
+\begin{figure}[H]
+\centering
+\subfloat[data5]{
+    \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=6.5cm]{reports/Figures/data5.PNG}
+    \end{minipage}
+}
+\subfloat[data6]{
+    \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=6.5cm]{reports/Figures/data6.PNG}
+    \end{minipage}
+}
+
+\subfloat[data7]{
+    \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=6.5cm]{reports/Figures/data7.PNG}
+    \end{minipage}
+    }
+\subfloat[data8]{    
+    \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=6.5cm]{reports/Figures/data8.PNG}
+    \end{minipage}
+}
+\caption{Plots of datasets 2} 
+\label{Plots of datasets 2}%                         
+\end{figure}
+By applying TCN on datasets, we get experiment results as below:
+\begin{table}[H]
+\centering
+\caption{TCN Performance Comparison 2}
+\begin{tabular}{l r r r r}
+\toprule
+\textbf{data}  & \textbf{data size}& \textbf{$R^2$} & \textbf{epoch}& \textbf{stable epoch}\\
+\midrule
+data5 & 4848 & 0.7525 & 150& 70\\
+data6 & 12120 & 0.8587 & 150& 30 \\
+data7 & 24240 & 0.8591 & 150& 10 \\
+data8 & 36360 & 0.8607 & 150& 10 \\
+original data & 60600 & 0.8641& 150& 10 \\
+\bottomrule
+\end{tabular}
+\label{tab:TCN2}
+\end{table}
+For long-term dataset, TCN would easily get a good fitted result with only 10 epochs training, while for short-term dataset, TCN perform worse and need more than 70 epochs training to provide a relatively good result.\\
+And we also apply the same datas into LSTM model, here is table of LSTM training results:
+\begin{table}[H]
+\centering
+\caption{LSTM Performance Comparison 2}
+\begin{tabular}{l r r r r}
+\toprule
+\textbf{data}  & \textbf{data size}& \textbf{$R^2$} & \textbf{epoch}& \textbf{stable epoch}\\
+\midrule
+data5 & 4848 & 0.8149 & 50& 30\\
+data6 & 12120 & 0.8441 & 50& 20 \\
+data7 & 24240 & 0.8656 & 50& 10 \\
+data8 & 36360 & 0.8674 & 50& 10 \\
+original data & 60600 & 0.8763& 50& 10 \\
+\bottomrule
+\end{tabular}
+\label{tab:LSTM2}
+\end{table}
+For the $R^2$ of long-term data and short-term data, LSTM also get a lower improvement compared to TCN, which means that TCN is more sensitive to the data size. However, when faced a small dataset, LSTM need fewer epochs to attain the relative optimal point than TCN, which indicates that LSTM would be more efficient in time series data training while applying on small sample. One of the reasons is that TCN model have convolutional layers with more parameters need to be iterated. When LSTM is processing, only one hidden state need to be concentrate on and every state get one single input, while for TCN, it request a long enough sequence to keep the history state, which require a bigger memory. However, since the same filter is used in each layer, convolutions can be done in parallel, so that TCN would be more efficient on huge dataset instead of small dataset. \\
+
