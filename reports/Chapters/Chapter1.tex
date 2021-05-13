@@ -66,14 +66,57 @@ The partition-based method is used for anomaly detection, which is often very in
 Specifically, in order to avoid false alarms caused by single-point jitter, it is necessary to determine the average value of the accumulated window for threshold judgment, and the specific accumulation is to operate through the window. There are many optional choices for the statistical characteristics of the window, such as moving average, cumulative moving average, weighted moving average,exponential weighted moving average, stddev from average etc. 
 
 \section{Statistical Methods and Comparassion}
-TODO: Stationarity and Whithe noise
-\subsection{AR and MA}
-TODO: Details
-\subsection{ARMA and ARIMA}
-TODO: Details
-\subsection{GARCH}
-TODO: Details
+The foundation of time series analysis is stationarity. Stationarity can be defined in precise mathematical terms, but for our purpose we mean a flat looking series, without trend, constant variance over time, a constant autocorrelation structure over time and no periodic fluctuations (seasonality).
 
+
+A time series ${r_t}$ is said to be strictly stationary if the joint distribution of $(r_{t_1}, . . . . . ., r_{t_k})$ is identical to that of $(r_{t_1 + t} , . . . . . ., r_{t_{k}+t})$ for all t, where k is an arbitrary positive integer and $(t_1, . . . . . . , t_k)$ is a collection of k positive integers. This is a very strong condition that is hard to verify empirically. However a time series ${r_t}$ is weakly stationary if both the mean of $r_t$ and the covariance between $r_t$ and $r_{t-l}$ are time invariant, where $l$ is an arbitrary integer. More specifically, ${r_t}$ is weakly stationary if
+
+(a) $E(r_t) = \mu$, which is a constant, and
+
+(b) $Cov( r_t ,  r_{t-l} ) = \gamma_{l} $, which only depends on $l$.
+
+A time series $r_t$ is called a white noise if $\{r_t\}$ is a sequence of independent and identically distributed random variables with finite mean and variance. Here “noise” means there’s no pattern, just random variation. The “white” is because all freqencies are equally represented. This will become clear when we do frequency domain analysis of time series.
+
+If $r_t$ is normally distributed with mean zero and variance $\sigma^2$, the series is called a $\mbox{Gaussian white noise}$.
+
+\subsection{AR and MA}
+Two of the most common models in time series are the Autoregressive (AR) models and the Moving Average (MA) models.
+\subsubsection{AR}
+The basic idea of AR is that we will model the response at time $x_t$ t as a linear function of its $p$ previous values and some independent random noise. We explicitly define an autoregressive model of order $p$, abbreviated as $AR (p)$ as:
+$$ (x_t - \mu_x) = \phi_1 (x_{t-1} - \mu_X) + \phi_2 (x_{t-2} - \mu_X) + \cdots + \phi_p (x_{t-p} - \mu_X) + w_t$$
+where $\phi_p \neq 0$, $x_t$ is stationary with mean $E[x_t] = \mu_x$, and $w_t \overset{\text{i.i.d}}{\sim} N(0, \sigma_w^2)$
+
+The autoregressive operator notation:
+$$ \phi(B) = 1 - \phi_1 B -  \phi_2 B^2 - \cdots  -\phi_p B^p,$$
+where $B^p x_t = x_{t-p}$ is the backshift operator. We can rewrite the AR model as $ \phi (B)(x_t - \mu_x) = w_t $.
+
+\subsubsection{MA}
+Instead of assuming that elements of a time series $x_t$ are linear function of previous elements of the time series $(x_1, . . . , x_{t−1})$ and independent, identically distributed noise $w_t$, we might assume that elements of a time series $x_t$ are a linear function of all of the current and previous noise variates, $w_1, . . . , w_{t−1}$. The latter gives us the moving average model of order $q$, abbreviated as $MA (q)$. The $MA (q)$ model is explicitly defined as:
+$$  x_t - \mu_x =  w_t + \theta_1 w_{t-1} + \theta_2 w_{t-2} + \cdots + \theta_q w_{t-q},$$
+where $\theta_q \neq 0$, $E[x_t] = \mu_x$, and $w_t \overset{\text{i.i.d}}{\sim} N(0, \sigma_w^2)$. The moving average operator notation: 
+$$ \theta (B) = 1 + \theta_1 B + \theta_2 B^2 + \cdots + \theta_p B^p $$We can rewrite the MA model as $ x_t - \mu_x = \theta(B)w_t$.
+
+\subsection{ARMA and ARIMA}
+\subsubsection{ARMA}
+The autoregressive moving average (ARMA) model combines the AR and MA models. We define an $ARMA(p, q)$ model as:
+$$ (x_t - \mu_x) = \phi_1 (x_{t-1} - \mu_X)  + \cdots + \phi_p (x_{t-p} - \mu_X) +  \theta_1 w_{t-1}  + \cdots + \theta_q w_{t-q} + w_t$$
+where $w_t \overset{\text{i.i.d}}{\sim} N(0, \sigma_w^2)$, $x_t$ is stationary, $p$ as the autoregressive
+order and $q$ as the moving average order. 
+
+\subsubsection{ARIMA}
+ARIMA is an acronym that stands for Auto-Regressive Integrated Moving Average. Specifically, $AR$ means autoregression, $MA$ means moving Average. Here $I$ means integrated, the use of differencing of raw observations in
+order to make the time series stationary. Usually, a process $x_t$ is said to be $ARIMA(p, d, q)$ if:
+$$ \nabla^d X_t  = (1-B)^d X_t$$
+is $ARMA(p,q)$. In general, $ARIMA(p, d, q)$ model can be written as:
+$$ \phi (B)(1-B)^d x_t = \theta(B) w_t $$
+
+\subsection{GARCH}
+The autoregressive conditional heteroscedasticity (ARCH) model is a statistical model for time series data that describes the variance of the current error term or innovation as a function of the actual sizes of the previous time periods' error terms. The ARCH model is appropriate when the error variance in a time series follows an autoregressive (AR) model; if an autoregressive moving average (ARMA) model is assumed for the error variance, the model is a generalized autoregressive conditional heteroskedasticity (GARCH) model.
+
+Let $Z_t$ be $N(0,1)$. The process $x_t$ is a GARCH(p,q) process if it is stationary and if it satisfies, for all $t$ and some strictly positive-valued process $\sigma_t$, the equations:
+$$ x_t  = \sigma_t Z_t$$
+$$ \sigma_t^2 = \alpha_0 + \sum_{i = 1}^{q} \alpha_i X_{t-i}^2 + \sum_{j = 1}^{p} \phi_j \sigma_{t-j}^2 $$
+where $\alpha_0 > 0$ and $\alpha_i >= 0$, i = $1,\cdots,q$, j = $1,\cdots,p$.
 %----------------------------------------------------------------------------------------
 
 \section{Architecture of This Report}
