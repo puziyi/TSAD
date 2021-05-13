@@ -6,9 +6,9 @@
 \setlength{\parindent}{0pt}
 %----------------------------------------------------------------------------------------
 
-\section{Data Description}
 We will try to model and refine our predictions and detections on electronic grid load issues with the base of understanding existing models and characters of kinds of data set. There are two kinds of reasons to choose such a special problem to solve. One is that compared to other kinds of sequential data; grid load data is relatively stable and cyclic. This feature makes it more factorable to label or locate "anomaly period" so that our model could have more application beyond one certain dataset. On the other hand, all the datasets in Chapter3 we have tested are offered by university labs and commonly used in machine learning tasks. They were elaborative preprocessed already and might make significance in new model checking than application. 
 
+\section{Data Description}
 For grid load data, anomaly detection is useful but might be ignored by many analysts. Not only to deal with grid supply smarter, energy-saving, and could prevent fire caused by over-electricity load, but also, could be used into crime capture or financial evaluations(like loan limitations for factories), because nearly all the activities need electronic equipment and once we detect anomaly load in some subsection of the grid, i.e., distinct or state levels, might reflect some vital changes in producing or daily lives. 
 
 We used GEFCom2014 (Electric load forecasting) as our mainly dataset to train our models, a probabilistic energy forecasting competition with four tracks on load, price, wind and solar forecasting, which attracted 581 participants from 61 countries. And we draw a basic trends plot for it, as Figure \ref{fig:gefc2014} shows.
@@ -453,14 +453,25 @@ LSTM\-MIMO & 378.31& 16.18& 0.87& 19.45 \\
 FNN & 330.90& 10.53& 0.88& 18.19 \\
 \bottomrule
 \end{tabular}
-\label{tab:models}
+\label{tab:kernal}
 \end{table}
 
 The result shows that TCN can achieve the best performance among all models in this electronic grid load issues. TCN model has a flexible receptive field size, which can be adjusted according to different application situation and tasks. which afford better control of the model’s memory size, and are easy to adapt to different domains. The improved TCN model is less sensitive to data size, speeds up iteration and improves predicting performance. Our result also shows that TCN can be served as a convenient but powerful starting point when dealing with sequential data. 
 
 \section{Speed Up with Attention Mechanism}
-Since TCN needs a huge computatial resources to fit a good model state, although we could enlarge sensitive field to decrease the complity but from other side, the structure of deep network should be more effective. From the original transform of sequence modeling, researchers try to imporve performance on this aspect by two methods, the one is using convolution layers, the other is using attention mechanism.
-
-We use encoding and decoding capsule to warp the TCN moduels, and modify the core network structure as following. 
+Since TCN needs a huge computatial resources to fit a good model state, although we could enlarge sensitive field to decrease the complity but from other side, the structure of deep network should be more effective. From the original transform of sequence modeling, researchers try to imporve performance on this aspect by two methods, the one is using convolution layers, the other is using attention mechanism. We imported encoding and decoding capsule to warp the TCN moduels, and modify the core network structure as following. 
 
 The performance of the new structure list the below table.
+\begin{table}[H]
+\centering
+\caption{Speed of TCN and Attention Capsuled TCN}
+\begin{tabular}{l c c}
+\toprule
+\textbf{Model} & \textbf{$R^2$}& \textbf{Training Time(Second)}\\
+\midrule
+Raw TCN &0.86& 278\\
+Attention Capsuled TCN &0.69 & 163\\
+\bottomrule
+\end{tabular}
+\label{tab:attentionTCN}
+\end{table}
