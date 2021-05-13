@@ -51,7 +51,7 @@ headsepline, % Uncomment to get a line under the header
 % \usepackage{indentfirst}
 \setlength\parindent{0pt}
 \usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
-
+\usepackage{subfloat}
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
 %----------------------------------------------------------------------------------------
@@ -183,7 +183,7 @@ Ziyi \textsc{Pu}
 
 \begin{abstract}
 \addchaptertocentry{\abstractname} % Add the abstract to the table of contents
-The Thesis Abstract is written here (and usually kept to just this page). The page is kept centered vertically so can expand into the blank space above the title too\ldots
+Anomaly Detection in sequence data remains a challenging task due to its nonlinear nature. For most deep learning researchers, recurrent networks is commonly used in sequence modeling. Yet recent studies indicate that models with convolutional architectures can perform better than recurrent networks on tasks such as audio synthesis and machine translation. Then given a time series task or dataset, would convolutional architectures still works well? In our work, we reviewing and experimentally evaluating on a real-world electric load dataset by contrasting deep learning architectures on short term forecast. The algorithms we used in project are feedforward neural networks(FNN),  recurrent neural networks (RNN) with Long Short-Term Memory (LSTM) and Gated Recurrent Units (GRU), sequence to sequence models (seq2seq) and temporal convolutional neural networks (TCN). 
 \end{abstract}
 
 %----------------------------------------------------------------------------------------
@@ -267,6 +267,7 @@ The Thesis Abstract is written here (and usually kept to just this page). The pa
 \include{Chapters/Chapter3}
 \include{Chapters/Chapter4} 
 \include{Chapters/Chapter5} 
+\include{Chapters/Reference} 
 
 %----------------------------------------------------------------------------------------
 %	THESIS CONTENT - APPENDICES
